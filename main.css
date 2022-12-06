@@ -1,0 +1,113 @@
+:root {
+    --app-padding: 16px;
+    --app-padding-md: 8px;
+    --app-padding-sm: 4px;
+
+    --button-primary: #00a8c7;
+    --button-secondary: #00c76f;
+    --main-bg-color: #182b39;
+    --text-background: #888
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    margin: var(--app-padding-md);
+}
+
+.container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--main-bg-color);
+    padding: var(--app-padding);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: whitesmoke;
+
+}
+
+
+.result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.result-text {
+    font-size: 3em;
+    margin: var(--app-padding);
+}
+
+.result-unit {
+    position: absolute;
+    top: var(--app-padding);
+}
+
+.sm-container {
+    padding: var(--app-padding);
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.action {
+    margin: var(--app-padding-md);
+    font-size: 1em;
+    background: none;
+    border: none;
+    padding: var(--app-padding-sm);
+    border-radius: var(--app-padding-sm);
+    color: white;
+    cursor: pointer;
+}
+
+.action:disabled {
+    background: var(--text-background);
+}
+
+.action-primary {
+    background: var(--button-primary);
+}
+
+.action-secondary {
+    background: var(--button-secondary);
+}
+
+
+
+.notes {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.note {
+    text-align: center;
+    background-color: var(--text-background);
+    padding: var(--app-padding-sm);
+    border-radius: var(--app-padding-sm);
+    max-width: 400px;
+}
