@@ -18,7 +18,10 @@ var testStartTime = 0;
 
 var btnStartShahid = $("#action-start-shahid"),
     btnStartLibre = $("#action-start-libre"),
-    txtResult = $("#txt-result");
+    btnStart = $("#action-start"),
+    txtResult = $("#txt-result"),
+    txtRTT = $("#txt-rtt"),
+    txtRTTDescription = $("#txt-rtt-description");
 
 
 btnStartLibre.addEventListener('click', () => {
@@ -29,19 +32,26 @@ btnStartShahid.addEventListener('click', () => {
     startTest('shahid')
 })
 
+btnStart.addEventListener('click', () => {
+    startTest();
+})
+
 
 function updateResultText(result) {
-    txtResult.innerText = result || 'starting';
+    txtResult.innerText = Number(result).toFixed(2) || 'starting';
 }
 
 function disableButtons(){
     btnStartShahid.disabled = true
     btnStartLibre.disabled = true
+    btnStart.disabled = true
 }
 
 function enableButtons(){
     btnStartShahid.disabled = false
     btnStartLibre.disabled = false
+    btnStart.disabled = false;
+
 }
 
 function onTestDone(result, logs){
@@ -52,22 +62,39 @@ function onTestDone(result, logs){
     console.log(logs)
     enableButtons();
     updateResultText(result);
-    logResultToRemote();
+    // logResultToRemote();
 }
 
-function startTest(server) {
+function startTest() {
+    disableButtons();
+
+    rttTest((description, result) => {
+        txtRTT.innerText = Number(result).toFixed(2);
+        txtRTTDescription.innerText = description
+
+        speedTest('libre')
+    })
+}
+
+function rttTest(onDone){
+    checkConnection({
+        onDone: onDone
+    })
+}
+
+function speedTest(server){
     const settings = {
         onResultUpdate: updateResultText,
         onDone: onTestDone
     };
     switch (server) {
         case 'shahid':
-            settings.dlUrl = 'test_assets/CHUNK_SIZE';
-            settings.dlChunkSize = 30;
+            settings.url = 'test_assets/CHUNK_SIZE';
+            settings.chunkSize = 30;
             break;
         case 'libre':
-            settings.dlUrl = 'https://de4.backend.librespeed.org/garbage.php?cors=true&r=0.28475918550518564&ckSize=CHUNK_SIZE';
-            settings.dlChunkSize = 100;
+            settings.url = 'https://de4.backend.librespeed.org/garbage.php?cors=true&r=0.28475918550518564&ckSize=CHUNK_SIZE';
+            settings.chunkSize = 100;
             break;
     }
 
@@ -78,7 +105,6 @@ function startTest(server) {
 
     testStartTime = Date.now();
 
-    disableButtons();
     startSpeedTest(settings)
 
 }

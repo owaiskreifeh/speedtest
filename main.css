@@ -19,6 +19,10 @@ h1 {
     margin: var(--app-padding-md);
 }
 
+.hidden {
+    display: none;
+}
+
 .container {
     position: fixed;
     top: 0;

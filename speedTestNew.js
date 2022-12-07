@@ -6,7 +6,7 @@ function byte_bit(B) { return B * 8 }
 function now() { return Date.now() }
 function untilNow(t) { return now() - t }
 function randomString(len = 16) { return Math.random().toString(36).substring(2, len + 2); }
-function log() { console.log("SpeedTest: ", ...arguments) }
+function log() { console.log("SpeedTest:", ...arguments) }
 
 
 const initSettings = {
@@ -150,7 +150,7 @@ function testDownloadSpeed(passedSettings = {}) {
 
     // Main update loop
     const looper = () => {
-        log(result, inGraceTime ? 'inGraceTime' : '');
+        log(result, { inGraceTime });
 
         if (settings.onProgress instanceof Function) {
             log("current progress", testProgress);
@@ -179,7 +179,7 @@ function testDownloadSpeed(passedSettings = {}) {
             const speed = totalLoaded / ms_s(t);
 
             if (settings.autoTiming) {
-                const bonus = (5 * speed) / 100 * 1000;
+                const bonus = (5 * speed) / (100 * 1000);
                 bonusTime += Math.min(settings.bonusTimeCap, bonus)
             }
 
@@ -204,4 +204,112 @@ function testDownloadSpeed(passedSettings = {}) {
     interval = setInterval(looper, settings.looperInterval)
 }
 
-testDownloadSpeed();
+
+
+function startSpeedTest(_settings) {
+
+    const settings = {
+        ...initSettings,
+        ..._settings,
+    }
+
+    const prevOnDone = settings.onDone;
+    settings.onDone = (...args) => {
+        prevOnDone && prevOnDone(...args);
+
+        xhr = [],
+            interval = null,
+            timeouts = [],
+            result = 0,
+            resumeTest = true;
+    }
+
+    settings.onProgress = settings.onResultUpdate;
+
+    testDownloadSpeed(settings);
+
+}
+
+
+
+const initConnectionSettings = {
+    url: "https://httpbin.org/get",
+    fastRTT: 400,
+    slowRTT: 2000,
+    maxRTT: 5000,
+
+    reties: 3,
+
+    useNavigator: true,
+
+    onDone: log
+}
+
+function checkConnection(_settings = {}) {
+    const settings = {
+        ...initConnectionSettings,
+        ..._settings,
+    }
+
+    const done = (...args) => {
+        if (settings.onDone instanceof Function) {
+            settings.onDone(...args);
+        }
+    }
+
+    if (settings.useNavigator && window.navigator.onLine !== undefined) {
+        if (!window.navigator.onLine) {
+            done('offline')
+        }
+    }
+
+    let totalLoadTime = null;
+    let totalRetries = settings.reties;
+    const test = (i, onDone) => {
+        const startTime = now();
+        const xhr = new XMLHttpRequest();
+        xhr.timeout = settings.maxRTT;
+
+        const loaded = () => {
+            if (i >= totalRetries) {
+                onDone();
+            } else {
+                test(i+1, onDone)
+            }
+        }
+        xhr.open('HEAD', settings.url, true);
+        xhr.onload = (e) => {
+            if (!totalLoadTime) {
+                totalLoadTime = untilNow(startTime);
+            } else {
+                totalLoadTime += untilNow(startTime);
+            }
+            loaded();            
+        };
+        xhr.onerror = (e) => {
+            if (xhr.status == 0) {
+                done('offline')
+            } else {
+                totalRetries--;
+                loaded();
+            }
+        };
+
+        xhr.ontimeout = () => {
+            done('offline')
+        }
+        xhr.send(null);
+    }
+
+    test(1, () => {
+        const avg = totalLoadTime / totalRetries;
+        if (avg <= settings.fastRTT) {
+            done('fast', avg);
+        } else if (avg <= settings.slowRTT) {
+            done('slow', avg)
+        } else {
+            done('unstable', avg)
+        }
+    })
+}
+

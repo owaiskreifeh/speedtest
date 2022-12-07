@@ -1,53 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="main.css">
-    <title>Shahid TV Speedtest</title>
-  </head>
-  <body>
-    <div class="container">
-      <div class="result">
-        <h1 class="result-text" id="txt-result">0</h1>
-        <span class="result-unit">Mbps</small>
-      </div>
-      <div class="sm-container">
-        <div class="actions">
-            <button class="action action-primary" id="action-start-shahid">
-              Start with Shahid test cases (Garbage size 30MB)
-            </button>
-            <button class="action action-secondary" id="action-start-libre">
-              Start with librespeed test cases (Garbage size 100MB)
-            </button>
-          </div>
-    
-         
-      </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="main.css">
+  <title>Shahid TV Speedtest</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="result">
+      <h1 class="result-text" id="txt-result">0</h1>
+      <span class="result-unit">Mbps</small>
+
     </div>
 
-    <div class="notes">
+    <div class="rtt-result">
+      <p class="rtt-result-text">
+        <small>RTT:</small> 
+        <span id="txt-rtt">0</span> 
+        <small>ms</small>
+        (<span id="txt-rtt-description">normal</span>)
 
-        <p class="note">
-            Open devtools for full logs after the test is done
-          </p>
-    
+      </p>
 
-        <p class="note">
-            Please use <a href="https://fast.com/">https://fast.com/</a> to compare
-            results
-          </p>
-    
-          <p class="note">
-            This is an expermintal test, and uses
-            <a href="https://github.com/librespeed/speedtest">librespeed</a>
-            modified code
-          </p>
-        </div>
+    </div>
+    <div class="sm-container">
+      <div class="actions">
+        <button class="action action-primary hidden" id="action-start-shahid">
+          Start with Shahid test cases (Garbage size 30MB)
+        </button>
+        <button class="action action-secondary hidden" id="action-start-libre">
+          Start with librespeed test cases (Garbage size 100MB)
+        </button>
+        <button class="action action-secondary" id="action-start">
+          Start
+        </button>
+      </div>
 
-    <!-- <script src="speedtest.js"></script> -->
-    <script src="speedTestNew.js"></script>
-    <script src="main.js"></script>
-  </body>
+
+    </div>
+  </div>
+
+  <div class="notes">
+
+    <p class="note">
+      Open devtools for full logs after the test is done
+    </p>
+
+
+    <p class="note">
+      Please use <a href="https://fast.com/">https://fast.com/</a> to compare
+      results
+    </p>
+
+    <p class="note">
+      This is an expermintal test, and uses
+      <a href="https://github.com/librespeed/speedtest">librespeed</a>
+      modified code
+    </p>
+  </div>
+
+  <!-- <script src="speedtest.js"></script> -->
+  <script src="speedTestNew.js"></script>
+  <script src="main.js"></script>
+</body>
+
 </html>
